@@ -1,0 +1,22 @@
+def create_cipher_mapping():
+    plaintext_alphabet = 'abcdefghijklmnopqrstuvwxyz'
+    ciphertext_alphabet = 'xyzabcdefghijklmnopqr'
+    cipher_mapping = dict(zip(plaintext_alphabet, ciphertext_alphabet))
+    return cipher_mapping
+
+def encrypt(text, cipher_mapping):
+    encrypted_text = ''.join(cipher_mapping.get(char, char) for char in text)
+    return encrypted_text
+
+def decrypt(encrypted_text, cipher_mapping):
+    decryption_mapping = {v: k for k, v in cipher_mapping.items()}
+    decrypted_text = ''.join(decryption_mapping.get(char, char) for char in encrypted_text)
+    return decrypted_text
+plaintext = "hello, world!"
+cipher_mapping = create_cipher_mapping()
+encrypted_text = encrypt(plaintext, cipher_mapping)
+decrypted_text = decrypt(encrypted_text, cipher_mapping)
+
+print("Original text:", plaintext)
+print("Encrypted text:", encrypted_text)
+print("Decrypted text:", decrypted_text)
