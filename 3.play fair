@@ -1,0 +1,59 @@
+def generate_playfair_matrix(keyword):
+    alphabet = "ABCDEFGHIKLMNOPQRSTUVWXYZ"  # Note the absence of 'J'
+    keyword = keyword.upper().replace("J", "I")  # Convert to uppercase and replace J with I
+    matrix = []
+
+    for letter in keyword:
+        if letter not in matrix and letter in alphabet:
+            matrix.append(letter)
+
+    for letter in alphabet:
+        if letter not in matrix:
+            matrix.append(letter)
+
+    playfair_matrix = [matrix[i:i + 5] for i in range(0, 25, 5)]
+    return playfair_matrix
+
+def playfair_encrypt(plaintext, keyword):
+    matrix = generate_playfair_matrix(keyword)
+    plaintext = plaintext.upper().replace("J", "I")
+    ciphertext = []
+
+    for i in range(0, len(plaintext), 2):
+        pair = plaintext[i:i+2]
+        if len(pair) < 2:
+            pair += "X"  # Add 'X' to make it a pair
+
+        if pair[0] == pair[1]:
+            pair = pair[0] + "X"
+
+        row1, col1 = -1, -1
+        row2, col2 = -1, -1
+
+        for row in range(5):
+            if pair[0] in matrix[row]:
+                row1 = row
+                col1 = matrix[row].index(pair[0])
+            if pair[1] in matrix[row]:
+                row2 = row
+                col2 = matrix[row].index(pair[1])
+
+        if row1 == row2:  # Same row
+            col1 = (col1 + 1) % 5
+            col2 = (col2 + 1) % 5
+        elif col1 == col2:  # Same column
+            row1 = (row1 + 1) % 5
+            row2 = (row2 + 1) % 5
+        else:
+            col1, col2 = col2, col1  # Swap columns
+
+        ciphertext.append(matrix[row1][col1] + matrix[row2][col2])
+
+    return "".join(ciphertext)
+
+# Example usage:
+keyword = "NETWORK"
+plaintext = "HELLO"
+ciphertext = playfair_encrypt(plaintext, keyword)
+print("Ciphertext:", ciphertext)
+
