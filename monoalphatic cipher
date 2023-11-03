@@ -1,0 +1,51 @@
+def generate_cipher_sequence(keyword):
+    # Create a set to store unique letters from the keyword
+    unique_letters = set()
+    
+    # Add letters from the keyword to the set
+    for char in keyword:
+        unique_letters.add(char)
+    
+    # Add remaining unused letters to the set
+    for char in "ABCDEFGHIJKLMNOPQRSTUVWXYZ":
+        if char not in unique_letters:
+            unique_letters.add(char)
+    
+    # Convert the set back to a string to get the cipher sequence
+    cipher_sequence = ''.join(unique_letters)
+    
+    return cipher_sequence
+
+def encrypt(plaintext, keyword):
+    # Generate the cipher sequence using the keyword
+    cipher_sequence = generate_cipher_sequence(keyword)
+    
+    # Create a dictionary to map plaintext letters to cipher letters
+    cipher_dict = {plain: cipher for plain, cipher in zip("ABCDEFGHIJKLMNOPQRSTUVWXYZ", cipher_sequence)}
+    
+    # Encrypt the plaintext using the cipher sequence
+    ciphertext = ''.join(cipher_dict.get(char, char) for char in plaintext.upper())
+    
+    return ciphertext
+
+def decrypt(ciphertext, keyword):
+    # Generate the cipher sequence using the keyword
+    cipher_sequence = generate_cipher_sequence(keyword)
+    
+    # Create a dictionary to map cipher letters to plaintext letters
+    cipher_dict = {cipher: plain for plain, cipher in zip("ABCDEFGHIJKLMNOPQRSTUVWXYZ", cipher_sequence)}
+    
+    # Decrypt the ciphertext using the cipher sequence
+    plaintext = ''.join(cipher_dict.get(char, char) for char in ciphertext)
+    
+    return plaintext
+
+# Example usage
+keyword = "CIPHER"
+plaintext = "abcdefghijklmnopqrstuvwxyz"
+ciphertext = encrypt(plaintext, keyword)
+decrypted_text = decrypt(ciphertext, keyword)
+
+print("Plaintext:", plaintext)
+print("Ciphertext:", ciphertext)
+print("Decrypted Text:", decrypted_text)
